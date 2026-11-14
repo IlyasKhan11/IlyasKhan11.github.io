@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Muhammad Ilyas Khan · AI/ML Engineer</title>
+  <meta name="description" content="AI/ML engineer in Karachi building computer vision pipelines, LLM apps and ML systems, shipped as FastAPI services.">
+  <meta name="theme-color" content="#070D09">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@600;900&family=Azeret+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!--
+    Decide right away whether this visit gets the intro, so the homepage never
+    flashes on screen first. Plays once per browser session; add ?intro to the
+    URL to force it. Skipped for people who ask their system for reduced motion.
+  -->
+  <script>
+    try {
+      var forceIntro = /[?&]intro\b/.test(location.search);
+      var alreadySeen = sessionStorage.getItem('intro-seen');
+      var wantsLessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (forceIntro || (!alreadySeen && !wantsLessMotion)) document.documentElement.classList.add('intro-pending');
+    } catch (error) { /* storage blocked: just show the page */ }
+  </script>
+
+  <!-- Lets the 3D code write `import ... from "three"` and fetch it from the CDN. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Opening sequence (js/intro/). Hidden unless <html> has "intro-pending" or JS activates it. -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro-backdrop"></div>
+    <canvas class="intro-canvas"></canvas>
+    <p class="intro-fallback-name">ILYAS <span class="accent">KHAN</span></p>
+    <p class="intro-tagline"><span class="prompt">~ $</span> <span class="intro-tagline-text"></span><span class="cursor"></span></p>
+    <div class="intro-log"></div>
+    <button class="intro-skip" type="button">skip intro →</button>
+    <div class="intro-crt"></div>
+  </div>
+
+  <!--
+    3D slots: any element with data-voxel-models="id,id" gets a rotatable model.
+    Add data-voxel-sphere="off" to hide the dotted globe around it.
+    Model ids live in js/viewer/models/. One shared canvas draws them all (js/viewer/voxel-stage.js).
+  -->
+
+  <!-- ───────────────────────── top bar ───────────────────────── -->
+  <header class="topbar" data-reveal="down" style="--reveal-order: 0">
+    <a class="logo" href="#hero">ILYAS KHAN</a>
+    <nav class="topnav" aria-label="Main">
+      <a href="#career">~/career</a>
+      <a href="#projects">~/projects</a>
+      <a href="#stack">~/stack</a>
+      <a href="#about">~/about</a>
+      <a href="#contact">~/contact</a>
+    </nav>
+    <span class="availability"><span class="dot"></span>available for remote work</span>
+  </header>
+
+  <main>
+    <!-- ───────────────────────── 0: hero ───────────────────────── -->
+    <section id="hero" class="hero" data-section="0:hero">
+      <div class="hero-text">
+        <p class="prompt-line" data-reveal style="--reveal-order: 1"><span class="prompt">~ $</span> whoami</p>
+        <h1 class="hero-name" data-reveal style="--reveal-order: 2"><span class="hero-name-first">MUHAMMAD</span>ILYAS<br>KHAN</h1>
+        <p class="hero-role" data-reveal style="--reveal-order: 3"><strong>AI/ML Engineer</strong></p>
+        <p class="hero-meta" data-reveal style="--reveal-order: 4"><span class="accent">1+ yr</span> industry experience <span class="sep">·</span> Karachi, Pakistan</p>
+        <p class="hero-intro" data-reveal style="--reveal-order: 5">
+          I build and deploy AI systems end to end: from picking the model and designing
+          the pipeline to shipping it as a FastAPI service on real client data.
+        </p>
+        <div class="hero-actions" data-reveal style="--reveal-order: 6">
+          <a class="btn btn-solid" href="#contact">$ hire --remote</a>
+          <a class="btn btn-outline" href="#projects">view projects →</a>
+          <a class="btn btn-ghost" id="resume-link" href="assets/muhammad-ilyas-khan-resume.pdf" target="_blank" rel="noopener">resume.pdf ↓</a>
+        </div>
+      </div>
+
+      <div class="pane pane-active viewer-pane" data-reveal="zoom" style="--reveal-order: 3">
+        <div class="pane-head">
+          <span class="pane-index">1</span>
+          <span class="pane-path">~/models/<span id="model-file">knight.vox</span></span>
+          <span class="pane-tag">drag to rotate</span>
+        </div>
+        <div class="voxel-slot hero-slot" id="hero-slot" tabindex="0"
+             data-voxel-models="knight,robot,terminal,gamepad,cube"
+             aria-label="3D model. Drag, or use the arrow keys, to rotate it in any direction. Double-click to reset.">
+          <p class="voxel-caption" aria-live="polite"></p>
+          <button class="viewer-reset" id="viewer-reset" type="button" title="Reset rotation">⟲ reset</button>
+        </div>
+        <div class="pane-foot">
+          <div class="model-tabs" id="model-tabs" role="tablist" aria-label="Choose a 3D model"></div>
+          <span class="pane-version">v1.0</span>
+        </div>
+      </div>
+
+      <div class="checker-floor" aria-hidden="true" data-reveal="floor" style="--reveal-order: 2"></div>
+    </section>
+
+    <!-- ───────────────────────── 1: career ───────────────────────── -->
+    <section id="career" class="section" data-section="1:career">
+      <div class="section-head">
+        <div>
+          <p class="prompt-line"><span class="prompt">~ $</span> git log --career</p>
+          <h2 class="section-title">Career <span class="accent">log</span></h2>
+          <p class="section-lede">Full-time roles, internships and contract work. Newest first.</p>
+        </div>
+        <div class="voxel-slot section-model" data-voxel-models="camera" aria-hidden="true"><p class="voxel-caption"></p></div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-head"><span class="pane-index">2</span><span class="pane-path">~/career.log</span><span class="pane-tag">4 commits</span></div>
+        <ol class="career">
+          <li class="career-entry">
+            <p class="career-date">May 2026 – Oct 2026</p>
+            <h3>Associate AI Engineer <span class="muted">· Tezeract · Karachi (on-site)</span></h3>
+            <ul>
+              <li>Built and maintained AI pipelines for client projects: detection, tracking, segmentation and pose estimation.</li>
+              <li>Supported production deployments so they stayed reliable and fast under real workloads.</li>
+            </ul>
+          </li>
+          <li class="career-entry">
+            <p class="career-date">Mar 2026 – May 2026</p>
+            <h3>AI Engineer Intern <span class="muted">· Tezeract · Karachi (on-site)</span></h3>
+            <ul>
+              <li>Built and shipped AI services end to end as FastAPI APIs, from model selection to deployment on real client data.</li>
+              <li>Built the Football Free-Kick Analyzer and an ID-card OCR pipeline (see projects).</li>
+            </ul>
+          </li>
+          <li class="career-entry">
+            <p class="career-date">Jan 2026 – Mar 2026</p>
+            <h3>Backend Engineer <span class="muted">· Freelance / contract · Remote</span></h3>
+            <ul>
+              <li>Designed and built the REST APIs behind core business operations for an early-stage ERP startup.</li>
+              <li>Ran technical interviews and screening sessions for engineering candidates.</li>
+              <li>Presented the product at the National Incubation Center (NIC). The startup was later selected.</li>
+            </ul>
+          </li>
+          <li class="career-entry">
+            <p class="career-date">Nov 2025 – Feb 2026</p>
+            <h3>AI / ML Intern <span class="muted">· DevelopersHub Corporation · Remote</span></h3>
+            <ul>
+              <li>Built a dataset submission and validation backend: FastAPI, PostgreSQL for metadata, MongoDB for action logs.</li>
+              <li>Wrote a threaded batch pipeline that validates and uploads <span class="accent">10+ datasets in under 60 s</span> per batch.</li>
+              <li>Added Low / Medium / High priority scoring, and tracked experiments in MLflow.</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 2: projects ───────────────────────── -->
+    <section id="projects" class="section" data-section="2:projects">
+      <div class="section-head section-head-plain">
+        <div>
+          <p class="prompt-line"><span class="prompt">~ $</span> ls ~/projects</p>
+          <h2 class="section-title">Selected <span class="accent">projects</span></h2>
+          <p class="section-lede">Every card has its own model. Drag any of them.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-projects">
+        <article class="pane project project-featured">
+          <div class="pane-head"><span class="pane-index">1</span><span class="pane-path">~/projects/free-kick-analyzer</span><span class="pane-tag">tezeract</span></div>
+          <div class="project-layout">
+            <div class="voxel-slot project-model" data-voxel-models="football" data-voxel-sphere="off" aria-hidden="true"></div>
+            <div class="pane-body">
+              <h3>Football Free-Kick Analyzer</h3>
+              <p>A FastAPI service that takes match video, detects and counts each kick, cuts one clip per kick, and annotates it with player keypoints, ball boxes and the ball's flight path.</p>
+              <div class="metric"><span class="metric-value">3</span><span class="metric-label">annotation layers on every kick clip: keypoints, ball box, trajectory</span></div>
+              <ul class="tags"><li>computer vision</li><li>pose estimation</li><li>tracking</li><li>fastapi</li></ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="pane project">
+          <div class="pane-head"><span class="pane-index">2</span><span class="pane-path">~/projects/alphastream-omni</span><span class="pane-tag">hackathon</span></div>
+          <div class="voxel-slot project-model" data-voxel-models="microphone" data-voxel-sphere="off" aria-hidden="true"></div>
+          <div class="pane-body">
+            <h3>AlphaStream Omni</h3>
+            <p class="project-event">AMD Developer Hackathon · ACT II, lablab.ai</p>
+            <p>Turns earnings-call audio into BUY / HOLD / SELL signals from the transcript, financial sentiment and vocal tone. Includes an "Aurora" assistant, multi-call RAG search and a company-relationship graph.</p>
+            <div class="metric"><span class="metric-value">5</span><span class="metric-label">stages: ffmpeg → whisper → finbert → librosa → gemma</span></div>
+            <ul class="tags"><li>whisper</li><li>finbert</li><li>rag</li><li>fastapi</li><li>react</li></ul>
+          </div>
+        </article>
+
+        <article class="pane project">
+          <div class="pane-head"><span class="pane-index">3</span><span class="pane-path">~/projects/exoplanet-prediction</span><span class="pane-tag">nasa</span></div>
+          <div class="voxel-slot project-model" data-voxel-models="planet" data-voxel-sphere="off" aria-hidden="true"></div>
+          <div class="pane-body">
+            <h3>Exoplanet Prediction System</h3>
+            <p class="project-event">NASA Space Apps Challenge 2025</p>
+            <p>An end-to-end pipeline that classifies likely exoplanets from NASA's Kepler data, with a FastAPI inference backend and a React dashboard.</p>
+            <div class="metric"><span class="metric-value">92.79%</span><span class="metric-label">accuracy with XGBoost + Random Forest</span></div>
+            <ul class="tags"><li>xgboost</li><li>scikit-learn</li><li>fastapi</li><li>react</li></ul>
+          </div>
+        </article>
+
+        <article class="pane project">
+          <div class="pane-head"><span class="pane-index">4</span><span class="pane-path">~/projects/id-card-ocr</span><span class="pane-tag">tezeract</span></div>
+          <div class="voxel-slot project-model" data-voxel-models="id-card" data-voxel-sphere="off" aria-hidden="true"></div>
+          <div class="pane-body">
+            <h3>Document OCR Pipeline</h3>
+            <p>Cleans up photos of ID cards with OpenCV, reads them with Tesseract, and returns structured text over a FastAPI endpoint.</p>
+            <ul class="tags"><li>opencv</li><li>tesseract</li><li>fastapi</li></ul>
+          </div>
+        </article>
+
+        <article class="pane project">
+          <div class="pane-head"><span class="pane-index">5</span><span class="pane-path">~/projects/creator-studio</span><span class="pane-tag">full-stack</span></div>
+          <div class="voxel-slot project-model" data-voxel-models="clapperboard" data-voxel-sphere="off" aria-hidden="true"></div>
+          <div class="pane-body">
+            <h3>Creator Studio</h3>
+            <p>A full-stack content management tool: REST endpoints in FastAPI, a React frontend, sign-in, and database code split into small modules so it is easy to extend.</p>
+            <ul class="tags"><li>react</li><li>fastapi</li><li>sqlite</li><li>auth</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 3: stack ───────────────────────── -->
+    <section id="stack" class="section" data-section="3:stack">
+      <div class="section-head">
+        <div>
+          <p class="prompt-line"><span class="prompt">~ $</span> cat stack.py</p>
+          <h2 class="section-title">The <span class="accent">stack</span></h2>
+          <p class="section-lede">Tools I've used in real work, internships and hackathons.</p>
+        </div>
+        <div class="voxel-slot section-model" data-voxel-models="chip" aria-hidden="true"><p class="voxel-caption"></p></div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-head"><span class="pane-index">3</span><span class="pane-path">~/stack.py</span><span class="pane-tag">py</span></div>
+        <dl class="stack">
+          <div class="stack-row"><dt>languages</dt><dd><ul class="tags"><li>python</li><li>c/c++</li><li>javascript</li><li>sql</li></ul></dd></div>
+          <div class="stack-row"><dt>llm_genai</dt><dd><ul class="tags"><li>langchain</li><li>langgraph</li><li>rag</li><li>prompt engineering</li><li>vision-language models</li><li>whisper</li><li>hugging face</li></ul></dd></div>
+          <div class="stack-row"><dt>machine_learning</dt><dd><ul class="tags"><li>pytorch</li><li>scikit-learn</li><li>xgboost</li><li>random forest</li><li>numpy</li><li>pandas</li><li>matplotlib</li><li>seaborn</li></ul></dd></div>
+          <div class="stack-row"><dt>computer_vision</dt><dd><ul class="tags"><li>opencv</li><li>yolov8</li><li>mediapipe</li><li>detection &amp; tracking</li><li>ocr (tesseract)</li></ul></dd></div>
+          <div class="stack-row"><dt>mlops_cloud</dt><dd><ul class="tags"><li>mlflow</li><li>dvc</li><li>aws (ec2, s3, iam)</li><li>docker</li><li>git</li><li>linux</li><li>conda</li></ul></dd></div>
+          <div class="stack-row"><dt>backend_apis</dt><dd><ul class="tags"><li>fastapi</li><li>rest api design</li><li>postgresql</li><li>mongodb</li><li>sqlite</li><li>mysql</li></ul></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 4: principles ───────────────────────── -->
+    <section id="principles" class="section" data-section="4:principles">
+      <div class="section-head">
+        <div>
+          <p class="prompt-line"><span class="prompt">~ $</span> cat ~/brand/values.md</p>
+          <h2 class="section-title">How I <span class="accent">work</span></h2>
+          <p class="section-lede">Like chess: plan the next moves before making one.</p>
+        </div>
+        <div class="voxel-slot section-model" data-voxel-models="chessboard" aria-hidden="true"><p class="voxel-caption"></p></div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-head"><span class="pane-index">4</span><span class="pane-path">~/brand/values.md</span><span class="pane-tag">md</span></div>
+        <ol class="values">
+          <li><span class="value-name">First principles</span><span class="arrow">→</span><span>Reason from the ground up, like a proof.</span></li>
+          <li><span class="value-name">Think in moves</span><span class="arrow">→</span><span>See the next ten before making one.</span></li>
+          <li><span class="value-name">Rigor over hype</span><span class="arrow">→</span><span>Measure it before you claim it.</span></li>
+          <li><span class="value-name">Build to last</span><span class="arrow">→</span><span>Ship systems that hold up in production.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 5: about ───────────────────────── -->
+    <section id="about" class="section" data-section="5:about">
+      <div class="section-head">
+        <div>
+          <p class="prompt-line"><span class="prompt">~ $</span> cat about.md</p>
+          <h2 class="section-title">About <span class="accent">me</span></h2>
+          <p class="section-lede">Computer Science student at Dawood University, already shipping AI to clients.</p>
+        </div>
+        <div class="voxel-slot section-model" data-voxel-models="graduation-cap" aria-hidden="true"><p class="voxel-caption"></p></div>
+      </div>
+
+      <div class="grid grid-about">
+        <div class="pane">
+          <div class="pane-head"><span class="pane-index">5</span><span class="pane-path">~/education.md</span><span class="pane-tag">md</span></div>
+          <div class="pane-body">
+            <p class="career-date">Oct 2023 – Oct 2027</p>
+            <h3 class="about-heading">B.S. Computer Science</h3>
+            <p class="muted">Dawood University of Engineering &amp; Technology</p>
+
+            <p class="prompt-line small"><span class="prompt">~ $</span> ls certifications/</p>
+            <ul class="log">
+              <li><span class="log-index">[01]</span><span>Machine Learning Specialization · Stanford / DeepLearning.AI</span><span class="accent">2025</span></li>
+              <li><span class="log-index">[02]</span><span>Harvard CS50x Puzzle Day · 9/9 solved</span><span class="accent">2025</span></li>
+              <li><span class="log-index">[03]</span><span>LeetCode 100-Day Badge</span><span class="accent">2024</span></li>
+            </ul>
+
+            <p class="prompt-line small"><span class="prompt">~ $</span> ls hackathons/</p>
+            <ul class="log">
+              <li><span class="log-index">[01]</span><span>AMD Developer Hackathon · ACT II, lablab.ai</span><span class="accent">alphastream</span></li>
+              <li><span class="log-index">[02]</span><span>NASA Space Apps Challenge</span><span class="accent">2025</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-head"><span class="pane-index">6</span><span class="pane-path">~/interests/</span><span class="pane-tag">dir</span></div>
+          <div class="pane-body">
+            <p class="prompt-line small first"><span class="prompt">~ $</span> ls interests/</p>
+            <ul class="folders">
+              <li>philosophy/</li><li>theology/</li><li>chess/</li>
+              <li>mathematics/</li><li>logic/</li><li>gaming/</li>
+            </ul>
+            <pre class="code"><code><span class="kw">def</span> next_move(board):
+    <span class="kw">return</span> search(board, depth=<span class="num">10</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 6: writing ───────────────────────── -->
+    <section id="writing" class="section" data-section="6:writing">
+      <div class="pane pane-active newsletter">
+        <div class="pane-head"><span class="pane-index">7</span><span class="pane-path">~/writing/medium</span><span class="pane-tag">blog</span></div>
+        <div class="newsletter-body">
+          <div>
+            <p class="prompt-line"><span class="prompt">~ $</span> open blog</p>
+            <h2 class="newsletter-title">BUILD <span class="accent">LOGS</span></h2>
+            <p class="accent">&gt; what shipped, what broke, what got measured</p>
+            <p class="muted">
+              I write on Medium about computer vision, LLM apps and getting models into production,
+              with the odd detour through chess and logic.
+            </p>
+            <a class="btn btn-outline" href="https://medium.com/@ilyas.dev2021" target="_blank" rel="noopener">read on medium →</a>
+          </div>
+          <div class="voxel-slot section-model" data-voxel-models="book" aria-hidden="true"><p class="voxel-caption"></p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 7: contact ───────────────────────── -->
+    <section id="contact" class="section contact" data-section="7:contact">
+      <div class="section-head">
+        <div>
+          <p class="prompt-line"><span class="prompt">~ $</span> contact</p>
+          <h2 class="contact-title">LET'S <span class="accent">BUILD</span></h2>
+          <p class="section-lede">Open to remote roles and contracts. Tell me what you're building.</p>
+          <ul class="contact-links">
+            <li><span class="prompt">→</span> <a href="mailto:ilyas.dev2021@gmail.com">ilyas.dev2021@gmail.com</a></li>
+            <li><span class="prompt">→</span> <a href="https://github.com/IlyasKhan11" target="_blank" rel="noopener">github.com/IlyasKhan11</a></li>
+            <li><span class="prompt">→</span> <a href="https://www.linkedin.com/in/muhammad-ilyas-khan-88920122a/" target="_blank" rel="noopener">linkedin.com/in/muhammad-ilyas-khan</a></li>
+            <li><span class="prompt">→</span> <a href="https://medium.com/@ilyas.dev2021" target="_blank" rel="noopener">medium.com/@ilyas.dev2021</a></li>
+          </ul>
+          <p class="prompt-line cursor-line"><span class="prompt">~ $</span> <span class="cursor" aria-hidden="true"></span></p>
+        </div>
+        <div class="voxel-slot section-model" data-voxel-models="envelope" aria-hidden="true"><p class="voxel-caption"></p></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- tmux-style status bar. js/main.js highlights the section you're looking at. -->
+  <nav class="statusbar" aria-label="Sections" data-reveal="up" style="--reveal-order: 1">
+    <span class="status-session">[home]</span>
+    <div class="status-windows" id="status-windows"></div>
+    <span class="status-right"><button class="status-replay" id="replay-intro" type="button" title="Replay the intro">▶ intro</button><span id="status-clock"></span><span class="hide-sm">karachi</span></span>
+  </nav>
+
+  <script type="module" src="js/intro/intro.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
